@@ -6,30 +6,32 @@
     <title>NewsHub | Taaza Khabrein</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-100 font-sans">
 
     <header class="bg-indigo-700 text-white shadow-lg p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black italic">NEWS HUB</h1>
-            <span class="bg-red-500 text-[10px] px-2 py-1 rounded animate-pulse">LIVE</span>
+            <h1 class="text-2xl font-black italic tracking-tighter">NEWS HUB</h1>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+                <span class="text-[10px] font-bold uppercase">Live News</span>
+            </div>
         </div>
     </header>
 
     <main class="container mx-auto mt-6 px-4 pb-20">
         <div id="news-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <p class="col-span-full text-center py-20 text-gray-500 font-medium">Khabrein load ho rahi hain...</p>
+            <p class="col-span-full text-center py-20 text-gray-500 font-medium italic">Khabrein aur Ads load ho rahe hain...</p>
         </div>
     </main>
 
     <script>
-        // AAPKI API KEY PEHLE SE ADDED HAI
         const API_KEY = '911e44a2f2ba67cfa0abad78f092bf57'; 
+        const NATIVE_AD_ID = '29000696'; // Aapka Native Banner ID
         
-        // Proxy use kar rahe hain taaki "Connection Error" na aaye
         const ACTUAL_URL = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=in&max=10&apikey=${API_KEY}`;
         const PROXY_URL = `https://api.allorigins.win/get?url=${encodeURIComponent(ACTUAL_URL)}`;
 
-        async function fetchNews() {
+        async function fetchContent() {
             try {
                 const response = await fetch(PROXY_URL);
                 const rawData = await response.json();
@@ -39,28 +41,38 @@
                 container.innerHTML = ''; 
 
                 if (data.articles && data.articles.length > 0) {
-                    data.articles.forEach(article => {
+                    data.articles.forEach((article, index) => {
+                        // News Card
                         container.innerHTML += `
-                            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
                                 <img src="${article.image}" class="w-full h-52 object-cover" alt="img">
                                 <div class="p-5 flex-grow">
-                                    <h2 class="font-bold text-lg text-gray-800 mb-3">${article.title}</h2>
-                                    <p class="text-gray-600 text-sm mb-6">${article.description.substring(0, 100)}...</p>
-                                    <a href="YAHAN_APNA_CPA_LINK_DALEIN" class="block text-center bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-indigo-800 transition-all">
+                                    <h2 class="font-bold text-lg text-gray-800 mb-3 leading-tight">${article.title}</h2>
+                                    <p class="text-gray-600 text-sm mb-6 line-clamp-3">${article.description}</p>
+                                    <a href="${article.url}" target="_blank" class="block text-center bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-indigo-800 transition-all">
                                         Puri Khabar Padhein
                                     </a>
                                 </div>
                             </div>`;
+
+                        // Har 2 news ke baad ek Ad Banner aayega
+                        if ((index + 1) % 2 === 0) {
+                            container.innerHTML += `
+                                <div class="col-span-1 bg-yellow-50 border-2 border-dashed border-yellow-200 rounded-2xl p-4 flex flex-col items-center justify-center min-h-[250px]">
+                                    <span class="text-[10px] text-yellow-600 font-bold mb-2 uppercase tracking-widest">Sponsored Ad</span>
+                                    <div id="ad-${index}" class="w-full text-center">
+                                        <p class="text-sm text-gray-400">Ad ID: ${NATIVE_AD_ID} Loading...</p>
+                                        </div>
+                                </div>`;
+                        }
                     });
-                } else {
-                    container.innerHTML = "<p class='text-center col-span-full'>Khabrein nahi milin. API Limit check karein.</p>";
                 }
             } catch (error) {
-                document.getElementById('news-container').innerHTML = "<p class='text-center text-red-500 col-span-full'>Data load nahi ho raha. Ek baar refresh karein.</p>";
+                document.getElementById('news-container').innerHTML = "<p class='text-center text-red-500 col-span-full'>Data load nahi ho raha. Check Connection.</p>";
             }
         }
 
-        fetchNews();
+        fetchContent();
     </script>
 </body>
 </html>
