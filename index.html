@@ -3,76 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NewsHub | Taaza Khabrein</title>
+    <title>NewsHub | Your Own Content</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 font-sans">
 
     <header class="bg-indigo-700 text-white shadow-lg p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black italic tracking-tighter">NEWS HUB</h1>
-            <div class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
-                <span class="text-[10px] font-bold uppercase">Live News</span>
-            </div>
+            <h1 class="text-2xl font-black italic cursor-pointer" onclick="showListView()">NEWS HUB</h1>
+            <span class="bg-red-500 text-[10px] px-2 py-1 rounded animate-pulse">LIVE</span>
         </div>
     </header>
 
     <main class="container mx-auto mt-6 px-4 pb-20">
-        <div id="news-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <p class="col-span-full text-center py-20 text-gray-500 font-medium italic">Khabrein aur Ads load ho rahe hain...</p>
+        <div id="news-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <p class="col-span-full text-center py-20">Khabrein load ho rahi hain...</p>
+        </div>
+
+        <div id="news-detail" class="hidden max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-lg">
+            <button onclick="showListView()" class="mb-4 text-indigo-600 font-bold">← Wapas Jayein</button>
+            <div id="detail-content"></div>
         </div>
     </main>
 
     <script>
-        const API_KEY = '911e44a2f2ba67cfa0abad78f092bf57'; 
-        const NATIVE_AD_ID = '29000696'; // Aapka Native Banner ID
-        
-        const ACTUAL_URL = `https://gnews.io/api/v4/top-headlines?category=general&lang=en&country=in&max=10&apikey=${API_KEY}`;
-        const PROXY_URL = `https://api.allorigins.win/get?url=${encodeURIComponent(ACTUAL_URL)}`;
+        const API_KEY = '911e44a2f2ba67cfa0abad78f092bf57';
+        const NATIVE_AD_ID = '29000696';
+        let allArticles = [];
 
-        async function fetchContent() {
+        async function fetchNews() {
+            const ACTUAL_URL = `https://gnews.io/api/v4/top-headlines?category=general&lang=hi&country=in&max=10&apikey=${API_KEY}`;
+            const PROXY_URL = `https://api.allorigins.win/get?url=${encodeURIComponent(ACTUAL_URL)}`;
+            
             try {
-                const response = await fetch(PROXY_URL);
-                const rawData = await response.json();
-                const data = JSON.parse(rawData.contents);
-                
-                const container = document.getElementById('news-container');
-                container.innerHTML = ''; 
-
-                if (data.articles && data.articles.length > 0) {
-                    data.articles.forEach((article, index) => {
-                        // News Card
-                        container.innerHTML += `
-                            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
-                                <img src="${article.image}" class="w-full h-52 object-cover" alt="img">
-                                <div class="p-5 flex-grow">
-                                    <h2 class="font-bold text-lg text-gray-800 mb-3 leading-tight">${article.title}</h2>
-                                    <p class="text-gray-600 text-sm mb-6 line-clamp-3">${article.description}</p>
-                                    <a href="${article.url}" target="_blank" class="block text-center bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-md hover:bg-indigo-800 transition-all">
-                                        Puri Khabar Padhein
-                                    </a>
-                                </div>
-                            </div>`;
-
-                        // Har 2 news ke baad ek Ad Banner aayega
-                        if ((index + 1) % 2 === 0) {
-                            container.innerHTML += `
-                                <div class="col-span-1 bg-yellow-50 border-2 border-dashed border-yellow-200 rounded-2xl p-4 flex flex-col items-center justify-center min-h-[250px]">
-                                    <span class="text-[10px] text-yellow-600 font-bold mb-2 uppercase tracking-widest">Sponsored Ad</span>
-                                    <div id="ad-${index}" class="w-full text-center">
-                                        <p class="text-sm text-gray-400">Ad ID: ${NATIVE_AD_ID} Loading...</p>
-                                        </div>
-                                </div>`;
-                        }
-                    });
-                }
-            } catch (error) {
-                document.getElementById('news-container').innerHTML = "<p class='text-center text-red-500 col-span-full'>Data load nahi ho raha. Check Connection.</p>";
-            }
+                const res = await fetch(PROXY_URL);
+                const raw = await res.json();
+                const data = JSON.parse(raw.contents);
+                allArticles = data.articles;
+                renderList();
+            } catch (e) { console.log(e); }
         }
 
-        fetchContent();
+        function renderList() {
+            const list = document.getElementById('news-list');
+            list.innerHTML = '';
+            allArticles.forEach((article, index) => {
+                list.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col">
+                        <img src="${article.image}" class="w-full h-48 object-cover">
+                        <div class="p-5 flex-grow">
+                            <h2 class="font-bold text-lg mb-3">${article.title}</h2>
+                            <button onclick="showDetail(${index})" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">
+                                Puri Khabar Padhein
+                            </button>
+                        </div>
+                    </div>`;
+                
+                // Ads after every 2nd news
+                if ((index + 1) % 2 === 0) {
+                    list.innerHTML += `
+                        <div class="bg-yellow-50 border-2 border-dashed rounded-2xl p-4 text-center">
+                            <span class="text-xs font-bold text-yellow-600">ADVERTISEMENT</span>
+                            <p class="py-10 text-gray-400">Native Ad ID: ${NATIVE_AD_ID}</p>
+                        </div>`;
+                }
+            });
+        }
+
+        function showDetail(index) {
+            const article = allArticles[index];
+            document.getElementById('news-list').classList.add('hidden');
+            document.getElementById('news-detail').classList.remove('hidden');
+            
+            document.getElementById('detail-content').innerHTML = `
+                <img src="${article.image}" class="w-full rounded-xl mb-6">
+                <h1 class="text-3xl font-bold mb-4">${article.title}</h1>
+                <p class="text-gray-700 leading-relaxed text-lg mb-6">${article.content || article.description}</p>
+                <div class="bg-gray-100 p-6 rounded-xl text-center mb-6">
+                    <p class="text-sm font-bold text-gray-500 mb-2">SPONSORED OFFER</p>
+                    <a href="APNA_CPA_LINK_YAHAN" class="inline-block bg-green-500 text-white px-8 py-3 rounded-full font-bold">CLICK HERE TO JOIN</a>
+                </div>
+            `;
+            window.scrollTo(0, 0);
+        }
+
+        function showListView() {
+            document.getElementById('news-list').classList.remove('hidden');
+            document.getElementById('news-detail').classList.add('hidden');
+        }
+
+        fetchNews();
     </script>
 </body>
 </html>
