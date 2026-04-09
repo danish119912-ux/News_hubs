@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NewsHub | Fast News</title>
+    <title>NewsHub | Multi-API Fast</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
     <header class="bg-indigo-700 text-white p-4 sticky top-0 z-50 shadow-md">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-black italic cursor-pointer" onclick="showListView()">NEWS HUB</h1>
-            <span class="bg-green-500 text-[10px] px-2 py-1 rounded animate-pulse tracking-tighter uppercase">Ultra Fast</span>
+            <span class="bg-green-500 text-[10px] px-2 py-1 rounded animate-pulse">ULTRA FAST</span>
         </div>
     </header>
 
@@ -29,18 +29,41 @@
         const NATIVE_AD_ID = '29000696';
         let allArticles = [];
 
+        // AAPKI SARI APIs LIST
+        const APIs = [
+            "https://inshortsapi.vercel.app/news?category=all",
+            "https://gnews.io/api/v4/top-headlines?category=general&lang=hi&country=in&max=10&apikey=911e44a2f2ba67cfa0abad78f092bf57"
+        ];
+
         async function loadNews() {
-            try {
-                // Inshorts API (No Key Needed)
-                const res = await fetch("https://inshortsapi.vercel.app/news?category=all");
-                const result = await res.json();
-                if(result.success) {
-                    allArticles = result.data;
-                    renderList();
+            for (let url of APIs) {
+                try {
+                    const res = await fetch(url);
+                    const result = await res.json();
+                    
+                    // Inshorts data format check
+                    if (result.success && result.data) {
+                        allArticles = result.data;
+                    } 
+                    // GNews data format check
+                    else if (result.articles) {
+                        allArticles = result.articles.map(a => ({
+                            title: a.title,
+                            content: a.description,
+                            imageUrl: a.image,
+                            readMoreUrl: a.url
+                        }));
+                    }
+                    
+                    if (allArticles.length > 0) {
+                        renderList();
+                        return; // Agar data mil gaya toh stop karein
+                    }
+                } catch (e) {
+                    console.log("API Failed, trying next...");
                 }
-            } catch (e) {
-                document.getElementById('news-list').innerHTML = "Refresh again to load news.";
             }
+            document.getElementById('news-list').innerHTML = "No News Found. Try again later.";
         }
 
         function renderList() {
@@ -49,17 +72,19 @@
             allArticles.forEach((article, index) => {
                 list.innerHTML += `
                     <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col hover:shadow-lg transition">
-                        <img src="${article.imageUrl}" class="w-full h-48 object-cover">
+                        <img src="${article.imageUrl || article.image}" class="w-full h-48 object-cover">
                         <div class="p-5 flex-grow">
                             <h2 class="font-bold text-lg mb-4 leading-tight">${article.title}</h2>
                             <button onclick="showDetail(${index})" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Puri Khabar Padhein</button>
                         </div>
                     </div>`;
+                
+                // Ads after every 3 items
                 if ((index + 1) % 3 === 0) {
                     list.innerHTML += `
                         <div class="bg-indigo-50 border-2 border-dashed rounded-2xl p-4 flex flex-col items-center justify-center">
-                            <span class="text-[10px] font-bold text-indigo-400 mb-2 underline tracking-widest">ADVERTISEMENT</span>
-                            <p class="text-xs text-indigo-600 font-bold">Ad Slot ID: ${NATIVE_AD_ID}</p>
+                            <span class="text-[10px] font-bold text-indigo-400 mb-2 underline uppercase tracking-widest">Sponsored</span>
+                            <p class="text-xs text-indigo-600 font-bold">Banner ID: ${NATIVE_AD_ID}</p>
                         </div>`;
                 }
             });
@@ -70,11 +95,11 @@
             document.getElementById('news-list').classList.add('hidden');
             document.getElementById('news-detail').classList.remove('hidden');
             document.getElementById('detail-content').innerHTML = `
-                <img src="${article.imageUrl}" class="w-full rounded-2xl mb-6 shadow-md">
+                <img src="${article.imageUrl || article.image}" class="w-full rounded-2xl mb-6 shadow-md">
                 <h1 class="text-2xl font-extrabold mb-4 text-gray-900">${article.title}</h1>
-                <p class="text-gray-700 text-lg leading-relaxed mb-8">${article.content}</p>
+                <p class="text-gray-700 text-lg leading-relaxed mb-8">${article.content || article.description}</p>
                 <div class="bg-yellow-100 p-6 rounded-2xl text-center border-2 border-yellow-400">
-                    <p class="font-bold text-yellow-800 mb-4 uppercase text-xs">Special Sponsored Offer</p>
+                    <p class="font-bold text-yellow-800 mb-4 uppercase text-xs">Special Offer</p>
                     <a href="APNA_CPA_LINK_YAHAN" class="inline-block bg-black text-white px-10 py-4 rounded-full font-black shadow-lg">CONTINUE READING</a>
                 </div>`;
             window.scrollTo(0, 0);
