@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NewsHub | Multi-API Fast</title>
+    <title>NewsHub | Inshorts Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50">
-    <header class="bg-indigo-700 text-white p-4 sticky top-0 z-50 shadow-md">
+<body class="bg-gray-50 font-sans">
+
+    <header class="bg-indigo-700 text-white shadow-lg p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-black italic cursor-pointer" onclick="showListView()">NEWS HUB</h1>
-            <span class="bg-green-500 text-[10px] px-2 py-1 rounded animate-pulse">ULTRA FAST</span>
+            <span class="bg-red-500 text-[10px] px-2 py-1 rounded animate-pulse uppercase font-bold">Inshorts Live</span>
         </div>
     </header>
 
     <main class="container mx-auto mt-6 px-4 pb-20">
         <div id="news-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <p class="col-span-full text-center py-20">Khabrein load ho rahi hain...</p>
+            <p class="col-span-full text-center py-20 font-medium text-gray-500">Khabrein load ho rahi hain...</p>
         </div>
 
-        <div id="news-detail" class="hidden max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-xl">
-            <button onclick="showListView()" class="mb-6 text-indigo-600 font-bold">← Back to News</button>
+        <div id="news-detail" class="hidden max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
+            <button onclick="showListView()" class="mb-6 text-indigo-600 font-bold flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Wapas Jayein
+            </button>
             <div id="detail-content"></div>
         </div>
     </main>
@@ -29,62 +33,51 @@
         const NATIVE_AD_ID = '29000696';
         let allArticles = [];
 
-        // AAPKI SARI APIs LIST
-        const APIs = [
-            "https://inshortsapi.vercel.app/news?category=all",
-            "https://gnews.io/api/v4/top-headlines?category=general&lang=hi&country=in&max=10&apikey=911e44a2f2ba67cfa0abad78f092bf57"
-        ];
-
-        async function loadNews() {
-            for (let url of APIs) {
-                try {
-                    const res = await fetch(url);
-                    const result = await res.json();
-                    
-                    // Inshorts data format check
-                    if (result.success && result.data) {
-                        allArticles = result.data;
-                    } 
-                    // GNews data format check
-                    else if (result.articles) {
-                        allArticles = result.articles.map(a => ({
-                            title: a.title,
-                            content: a.description,
-                            imageUrl: a.image,
-                            readMoreUrl: a.url
-                        }));
-                    }
-                    
-                    if (allArticles.length > 0) {
-                        renderList();
-                        return; // Agar data mil gaya toh stop karein
-                    }
-                } catch (e) {
-                    console.log("API Failed, trying next...");
+        // Sirf Inshorts API ka use
+        async function fetchInshorts() {
+            try {
+                // Inshorts API (No Key Needed)
+                const response = await fetch("https://inshortsapi.vercel.app/news?category=all");
+                const result = await response.json();
+                
+                if(result.success) {
+                    allArticles = result.data;
+                    renderList();
+                } else {
+                    throw new Error("API Response Error");
                 }
+            } catch (error) {
+                document.getElementById('news-list').innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <p class="text-red-500 font-bold mb-4">API connection failed!</p>
+                        <button onclick="location.reload()" class="bg-indigo-600 text-white px-6 py-2 rounded-lg">Refresh Karein</button>
+                    </div>`;
             }
-            document.getElementById('news-list').innerHTML = "No News Found. Try again later.";
         }
 
         function renderList() {
             const list = document.getElementById('news-list');
             list.innerHTML = '';
+            
             allArticles.forEach((article, index) => {
                 list.innerHTML += `
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col hover:shadow-lg transition">
-                        <img src="${article.imageUrl || article.image}" class="w-full h-48 object-cover">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-lg transition">
+                        <img src="${article.imageUrl}" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/400x200?text=News+Image'">
                         <div class="p-5 flex-grow">
-                            <h2 class="font-bold text-lg mb-4 leading-tight">${article.title}</h2>
-                            <button onclick="showDetail(${index})" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl">Puri Khabar Padhein</button>
+                            <h2 class="font-bold text-lg mb-4 text-gray-800 leading-tight">${article.title}</h2>
+                            <button onclick="showDetail(${index})" class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-md">
+                                Puri Khabar Padhein
+                            </button>
                         </div>
                     </div>`;
                 
-                // Ads after every 3 items
+                // Native Banner Ad after every 3 articles
                 if ((index + 1) % 3 === 0) {
                     list.innerHTML += `
-                        <div class="bg-indigo-50 border-2 border-dashed rounded-2xl p-4 flex flex-col items-center justify-center">
-                            <span class="text-[10px] font-bold text-indigo-400 mb-2 underline uppercase tracking-widest">Sponsored</span>
-                            <p class="text-xs text-indigo-600 font-bold">Banner ID: ${NATIVE_AD_ID}</p>
+                        <div class="bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-2xl p-4 flex flex-col items-center justify-center min-h-[200px]">
+                            <span class="text-[10px] font-bold text-indigo-400 mb-2 uppercase tracking-widest">Sponsored Ad</span>
+                            <p class="text-xs text-indigo-600 font-bold mb-1">Banner ID: ${NATIVE_AD_ID}</p>
+                            <p class="text-[10px] text-gray-400">Loading Native Ad...</p>
                         </div>`;
                 }
             });
@@ -94,14 +87,20 @@
             const article = allArticles[index];
             document.getElementById('news-list').classList.add('hidden');
             document.getElementById('news-detail').classList.remove('hidden');
+            
             document.getElementById('detail-content').innerHTML = `
-                <img src="${article.imageUrl || article.image}" class="w-full rounded-2xl mb-6 shadow-md">
-                <h1 class="text-2xl font-extrabold mb-4 text-gray-900">${article.title}</h1>
-                <p class="text-gray-700 text-lg leading-relaxed mb-8">${article.content || article.description}</p>
-                <div class="bg-yellow-100 p-6 rounded-2xl text-center border-2 border-yellow-400">
-                    <p class="font-bold text-yellow-800 mb-4 uppercase text-xs">Special Offer</p>
-                    <a href="APNA_CPA_LINK_YAHAN" class="inline-block bg-black text-white px-10 py-4 rounded-full font-black shadow-lg">CONTINUE READING</a>
-                </div>`;
+                <img src="${article.imageUrl}" class="w-full rounded-2xl mb-6 shadow-md">
+                <h1 class="text-3xl font-extrabold text-gray-900 mb-4 leading-tight">${article.title}</h1>
+                <p class="text-gray-700 text-lg leading-relaxed mb-8">${article.content}</p>
+                
+                <div class="bg-yellow-100 p-8 rounded-2xl text-center border-2 border-yellow-400">
+                    <h3 class="font-black text-xl mb-4 text-yellow-800 uppercase">Special Reader Bonus</h3>
+                    <p class="text-yellow-700 mb-6">Is news ke baare mein aur janne ke liye niche button par click karein.</p>
+                    <a href="APNA_CPA_LINK_YAHAN" class="inline-block bg-indigo-700 text-white px-10 py-4 rounded-full font-black text-lg shadow-xl hover:scale-105 transition-transform">
+                        CLICK TO CONTINUE
+                    </a>
+                </div>
+            `;
             window.scrollTo(0, 0);
         }
 
@@ -110,7 +109,8 @@
             document.getElementById('news-detail').classList.add('hidden');
         }
 
-        loadNews();
+        // Start Fetch
+        fetchInshorts();
     </script>
 </body>
 </html>
