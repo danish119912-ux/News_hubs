@@ -1,0 +1,62 @@
+{
+  "lastUpdated": "2026-04-09T08:04:31.142Z",
+  "totalArticles": 4,
+  "articles": [
+    {
+      "id": 2,
+      "title": "AI Tools Revolutionizing Newsrooms Across South Asia",
+      "summary": "Media organizations across South Asia are adopting AI writing assistants to enhance editorial productivity and content quality.",
+      "content": "Mumbai — A new wave of artificial intelligence tools is transforming newsrooms across South Asia, enabling journalists to produce content faster while maintaining editorial standards.\n\n  Major media houses in India, Pakistan, and Bangladesh have begun integrating AI writing assistants into their editorial workflows. These tools help reporters with research, headline generation, and first-draft creation, freeing up time for in-depth investigative work.\n\n  \"The AI handles the routine summaries while our team focuses on analysis and ground reporting,\" said Rajan Mehta, editor-in-chief of a leading digital news platform in Mumbai. \"Our output has increased by 40% without compromising accuracy.\"\n\n  However, the transition is not without challenges. Press freedom advocates warn about potential biases in AI-generated content and the risk of reducing editorial teams. Several newsrooms have implemented human review protocols to ensure all AI-assisted content meets ethical standards.\n\n  Industry experts predict that by 2027, over 60% of news articles globally will involve some degree of AI assistance in their creation process.",
+      "category": "Technology",
+      "tags": "AI, Journalism, Newsroom, Media, Technology",
+      "status": "published",
+      "author": "Arjun Kapoor",
+      "imageUrl": null,
+      "publishedAt": "2026-04-09T02:25:46.222Z",
+      "createdAt": "2026-04-09T07:25:46.222Z",
+      "updatedAt": "2026-04-09T07:25:46.222Z"
+    },
+    {
+      "id": 3,
+      "title": "Climate Summit: Asian Nations Pledge Net Zero by 2045",
+      "summary": "A landmark climate agreement was reached today as 18 Asian nations committed to achieving carbon neutrality by 2045.",
+      "content": "Singapore — Eighteen Asian nations made a landmark commitment today, pledging to achieve net-zero carbon emissions by 2045 — five years ahead of the global target set by the Paris Agreement.\n\n  The agreement, signed at the Singapore Climate Forum, covers nations representing 4.2 billion people and over 40% of global carbon emissions. China, India, Japan, South Korea, and Indonesia are among the signatories.\n\n  The pledges include transitioning to 80% renewable energy by 2035, phasing out coal power plants by 2038, and investing collectively $2.4 trillion in green infrastructure over the next decade.\n\n  \"This is a historic moment for Asia and for our planet,\" said Singapore's Prime Minister Lawrence Wong. \"We are not just making promises — we are committing to binding national legislation.\"\n\n  Environmental groups cautiously welcomed the agreement while stressing the need for accountability mechanisms. The United Nations will establish a monitoring framework to track progress and ensure compliance with the pledged timelines.",
+      "category": "Environment",
+      "tags": "Climate, Net Zero, Asia, Environment, Sustainability",
+      "status": "published",
+      "author": "Meena Patel",
+      "imageUrl": null,
+      "publishedAt": "2026-04-08T07:25:46.222Z",
+      "createdAt": "2026-04-09T07:25:46.222Z",
+      "updatedAt": "2026-04-09T07:25:46.222Z"
+    },
+    {
+      "id": 5,
+      "title": "Startup Ecosystem: India Mints 12 New Unicorns in 2026",
+      "summary": "India's startup ecosystem continues to thrive with 12 new unicorn companies in the first half of 2026.",
+      "content": "Bengaluru — India has produced 12 new unicorn startups in the first six months of 2026, cementing its position as the world's third-largest startup ecosystem after the United States and China.\n\n  The new unicorns span diverse sectors including fintech, healthtech, agritech, and climate technology. Bengaluru remains the startup capital with five of the twelve new unicorns headquartered in the city, followed by Delhi-NCR with four and Mumbai with two.\n\n  Total venture capital investment in Indian startups reached $18.3 billion in H1 2026, a 35% increase from the same period last year. Foreign investors from the US, Singapore, and Japan accounted for 68% of the total funding.\n\n  \"The quality of founders and the depth of talent pool has improved dramatically,\" said Anita Joshi, managing partner at a leading venture capital firm. \"We are seeing world-class solutions being built for Indian-scale problems.\"\n\n  The government's Startup India initiative has played a significant role, with over 120,000 DPIIT-recognized startups now operating across the country.",
+      "category": "Business",
+      "tags": "Startups, Unicorn, India, Venture Capital, Business",
+      "status": "published",
+      "author": "Deepa Nair",
+      "imageUrl": null,
+      "publishedAt": "2026-04-06T07:25:46.222Z",
+      "createdAt": "2026-04-09T07:25:46.222Z",
+      "updatedAt": "2026-04-09T07:25:46.222Z"
+    },
+    {
+      "id": 1,
+      "title": "Breaking: India Achieves Record Economic Growth in Q1 2026",
+      "summary": "India has recorded its highest quarterly GDP growth in the last decade, driven by manufacturing and digital exports.",
+      "content": "New Delhi — India achieved a record economic growth rate of 9.2% in the first quarter of 2026, according to the Ministry of Finance. The surge was primarily driven by robust manufacturing output and a significant expansion in digital services exports.\n\n  Finance Minister Nirmala Sitharaman credited the growth to structural reforms implemented over the past three years, including infrastructure investment and digital payment adoption. \"This milestone reflects the resilience and dynamism of the Indian economy,\" she stated at a press briefing.\n\n  The technology sector saw a 22% year-on-year increase, with exports crossing $180 billion for the first time. The automobile sector also showed strong recovery, with electric vehicle production doubling compared to Q1 2025.\n\n  Economists project that if the current trajectory continues, India could surpass Japan as the third-largest economy by 2028. However, some analysts caution that global uncertainties and monsoon variability remain key risks.\n\n  The data has prompted several international credit agencies to revise India's growth outlook upward for the fiscal year 2026-27.",
+      "category": "Economy",
+      "tags": "GDP, India, Economic Growth, Finance, Q1 2026",
+      "status": "published",
+      "author": "Priya Sharma",
+      "imageUrl": null,
+      "publishedAt": "2026-04-09T08:04:30.989Z",
+      "createdAt": "2026-04-09T07:25:46.222Z",
+      "updatedAt": "2026-04-09T08:04:30.990Z"
+    }
+  ]
+}
